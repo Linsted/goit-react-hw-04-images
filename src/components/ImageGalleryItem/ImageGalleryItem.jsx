@@ -1,44 +1,40 @@
 import { ModalWindow } from 'components/Modal/ModalWindow';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { ModalOpenButton } from './ImageGalleryItem.styled';
 
-export class  ImageGalleryItem extends React.Component {
-    
-    static propTypes = {
-        images: PropTypes.arrayOf(
-          PropTypes.object
-        ).isRequired,
-    }
 
-    state = {
-        openModal: false,
-        largeImage: "",
-    }
+export const ImageGalleryItem = ({images}) => {
 
-    openModal = (largeImage) => {
-        
-        this.setState({openModal: true, largeImage})
-    }
+    const [openModal, setOpenModal] = useState(false);
+    const [largeImage, setLargeImage] = useState('');
 
-    closeModal = (evt) => {
-        this.setState({openModal: false})
-    }
 
-    render() {
-            return (
+    const openModalWindow = (largeImage) => {
+        setOpenModal(true);
+        setLargeImage(largeImage);
+    };
+
+    const closeModal = () => setOpenModal(false);
+
+
+    return (
         <>
-                    {this.props.images.map(image => <li key={image.id}>
-                        <ModalOpenButton onClick={() => { this.openModal(image.largeImageURL) }} type='button'>
-                            <img src={image.webformatURL} alt={image.tags} width="400" height="300" />
-                        </ModalOpenButton>
-                        </li>)}
-            {this.state.openModal && (<ModalWindow onClose={this.closeModal} largeImage={this.state.largeImage} />)}
+            {images.map(image => <li key={image.id}>
+                <ModalOpenButton onClick={() => { openModalWindow(image.largeImageURL) }} type='button'>
+                    <img src={image.webformatURL} alt={image.tags} width="400" height="300" />
+                </ModalOpenButton>
+            </li>)}
+            {openModal && (<ModalWindow onClose={closeModal} largeImage={largeImage} />)}
         </>
-    )
-    }
-    
+    );
+};
+ 
 
-    
-}
 
+
+ImageGalleryItem.propTypes = {
+    images: PropTypes.arrayOf(
+        PropTypes.object
+    ).isRequired,
+};

@@ -1,37 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Searchbar } from "./Searchbar/Searchbar";
 import  { Toaster } from 'react-hot-toast';
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 
 
-export class  App extends React.Component {
+
+export const App = () => {
   
-  state = {
-    query: "",
-    page: 1,
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+
+  const handleSubmit = (query) => {
+    setQuery(query);
+    setPage(1);
     
   }
 
-
-
-  handleSubmit = (query) => {
-    
-    this.setState({ query, page: 1,  })
-    
-    
+  const handlePage = () => {
+    setPage(prevPage=> prevPage + 1)
   }
+
   
-  handlePage = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
-  }
-
-  render() {
-    return (
+  return (
       <div>
         <Toaster toastOptions={{duration: 2000,}} />
-        <Searchbar onSubmit={this.handleSubmit} />
-        <ImageGallery query={this.state.query} page={this.state.page} onLoadMore={this.handlePage} />
+        <Searchbar onSubmit={handleSubmit} />
+        <ImageGallery
+          query={query}
+          page={page}
+          onLoadMore={handlePage} />
     </div>
   );
-  }
-};
+}
